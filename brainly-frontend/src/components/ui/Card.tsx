@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ShareIcon } from "../../icons/ShareIcon"
 
 
@@ -8,6 +9,20 @@ interface CardProps {
 }
 
 export const Card = ({title, link, type}: CardProps) => {
+  console.log(title);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://platform.twitter.com/widgets.js';
+    script.async = true;
+    document.body.appendChild(script);
+  
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+  
+  console.log("Link value:", link); 
   return <div>
     <div className="p-4 bg-white rounded-md border border-gray-200 max-w-72 min-w-72 min-h-48">
       <div className="flex justify-between">
@@ -31,13 +46,25 @@ export const Card = ({title, link, type}: CardProps) => {
         
       </div>
       <div className="pt-4">
-        {type === "youtube" && <iframe className="w-full" src={link.replace("watch", "embed").replace("?v=", "/")} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>}
+        {type === "youtube" && (
+          <iframe
+            className="w-full"
+            src={`https://www.youtube.com/embed/${
+              link?.split('v=')[1]?.split('&')[0] || ''
+            }`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
+        )}
 
-        { type === "twitter" &&
+        {type === "twitter" && (
           <blockquote className="twitter-tweet">
-          <a href={link.replace("x.com", "twitter.com")}></a>
+            <a href={link.replace("x.com", "twitter.com")}></a>
           </blockquote>
-        }
+        )}
       </div>
     </div>
   </div>

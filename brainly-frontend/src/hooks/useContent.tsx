@@ -5,15 +5,19 @@ import { BACKEND_URL } from "../config";
 export const useContent = () => {
   const [contents, setContents] = useState([]);
 
-  function refresh(){
-    axios.get(`${BACKEND_URL}/api/v1/content`, {
-      headers: {
-        "Authorization": localStorage.getItem("token")
-      }
-    })
-    .then((response) => {
-      setContents(response.data.content)
-    })
+  async function refresh(){
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+        headers: {
+          "Authorization": localStorage.getItem("token")
+        }
+      })
+      console.log("API Response:", response.data); // Log the response
+      setContents(response.data.content);
+    } catch (error) {
+      console.error("Error fetching content", error);
+    }  
+  
   }
 
   useEffect(() => {
